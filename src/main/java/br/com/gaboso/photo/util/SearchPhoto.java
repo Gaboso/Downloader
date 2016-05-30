@@ -68,7 +68,7 @@ public class SearchPhoto {
                     System.out.println("Arquivo: " + name + " já existente!!!");
                 }
             } else {
-                System.out.println("Propaganda descartada!!! " + urlText+" \n");
+                System.out.println("Propaganda descartada!!! " + urlText + " \n");
             }
         } catch (IOException e) {
             e.printStackTrace();

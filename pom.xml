@@ -35,7 +35,7 @@
                     <archive>
                         <manifest>
                             <!-- Jar file entry point -->
-                            <mainClass>br.com.gaboso.photo.Search</mainClass>
+                            <mainClass>br.com.gaboso.photo.ClubP</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
