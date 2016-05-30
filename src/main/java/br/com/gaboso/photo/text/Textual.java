@@ -1,4 +1,4 @@
-package br.com.gaboso.textual;
+package br.com.gaboso.photo.text;
 
 public class Textual {
 

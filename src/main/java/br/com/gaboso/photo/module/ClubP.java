@@ -1,7 +1,7 @@
-package br.com.gaboso.photo;
+package br.com.gaboso.photo.module;
 
 import br.com.gaboso.photo.util.SearchPhoto;
-import br.com.gaboso.textual.Textual;
+import br.com.gaboso.photo.text.Textual;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,7 +16,7 @@ public class ClubP {
     public static final String DIV_GALLERY = "div[class=entry entry-gallery] > a";
     public static final String PATTERN_TITLE = "Photos \\| Club |Photos \\| ";
 
-    public void downloadClubP(String webSiteName, String destinationFolder) {
+    public void download(String webSiteName, String destinationFolder) {
         String url = Textual.HTTP_WWW + webSiteName + DOT_COM_PHOTOS;
 
         try {
