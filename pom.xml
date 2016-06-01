@@ -24,6 +24,13 @@
             <version>1.9.2</version>
         </dependency>
 
+        <!-- http://mvnrepository.com/artifact/com.miglayout/miglayout -->
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout</artifactId>
+            <version>3.7.4</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -37,7 +44,7 @@
                     <archive>
                         <manifest>
                             <!-- Jar file entry point -->
-                            <mainClass>br.com.gaboso.photo.util.Address</mainClass>
+                            <mainClass>br.com.gaboso.photo.UiScreen</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
