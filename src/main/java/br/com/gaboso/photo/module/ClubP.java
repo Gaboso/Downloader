@@ -11,10 +11,10 @@ import java.io.File;
 
 public class ClubP {
 
-    public static final String DOT_COM_PHOTOS = Textual.DOT_COM + "/photos/";
-    public static final String SPAN_TITLE = "span[class=entry-title]";
-    public static final String DIV_GALLERY = "div[class=entry entry-gallery] > a";
-    public static final String PATTERN_TITLE = "Photos \\| Club |Photos \\| ";
+    private static final String DOT_COM_PHOTOS = Textual.DOT_COM + "/photos/";
+    private static final String SPAN_TITLE = "span[class=entry-title]";
+    private static final String DIV_GALLERY = "div[class=entry entry-gallery] > a";
+    private static final String PATTERN_TITLE = "Photos \\| Club |Photos \\| ";
 
     public void download(String webSiteName, String destinationFolder) {
         String url = Textual.HTTP_WWW + webSiteName + DOT_COM_PHOTOS;
@@ -41,13 +41,14 @@ public class ClubP {
         SearchPhoto search = new SearchPhoto();
 
         for (Element element : elements) {
+            String subUrl = element.attr("href");
             //pegando o titulo da galeria
             String subFolder = element.select(SPAN_TITLE).text();
             subFolder = subFolder.replace("!", "");
             subFolder = subFolder.replaceAll(" ", "_");
             String newDestinationFolder = destinationFolder + "\\" + subFolder;
             boolean mkdirs = new File(newDestinationFolder).mkdirs();
-            search.connection(Textual.HREF, newDestinationFolder);
+            search.connection(subUrl, newDestinationFolder);
         }
     }
 

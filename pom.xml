@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>br.com.gaboso.photo</groupId>
-    <artifactId>SearchPhoto</artifactId>
+    <artifactId>Downloader</artifactId>
     <version>1.0-SNAPSHOT</version>
     <description>Algoritmo para buscar fotos</description>
 
