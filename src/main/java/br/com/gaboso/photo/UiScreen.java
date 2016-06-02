@@ -15,6 +15,9 @@ public class UiScreen {
     private JLabel labelDestinyFolder;
     private JLabel labelUrl;
 
+    private final Color RED = Color.decode("#F44336");
+    private final Color GREEN = Color.decode("#4CAF50");
+
     /**
      * Launch the application.
      */
@@ -23,6 +26,7 @@ public class UiScreen {
             try {
                 UiScreen window = new UiScreen();
                 window.frmSearchphotos.setVisible(true);
+                //UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -46,6 +50,7 @@ public class UiScreen {
         frmSearchphotos.setBounds(100, 100, 450, 129);
         frmSearchphotos.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frmSearchphotos.getContentPane().setLayout(null);
+        frmSearchphotos.setIconImage(new ImageIcon(UiScreen.class.getResource("/img/camera.png")).getImage());
 
         JPanel panel = new JPanel();
         panel.setBounds(0, 0, 444, 106);
@@ -83,15 +88,15 @@ public class UiScreen {
         String folderPath = destinyFolderField.getText();
 
         if (url != null && url.trim().length() > 0) {
-            labelUrl.setForeground(Color.GREEN);
+            labelUrl.setForeground(GREEN);
         } else {
-            labelUrl.setForeground(Color.RED);
+            labelUrl.setForeground(RED);
         }
 
         if (folderPath != null && folderPath.trim().length() > 0) {
-            labelDestinyFolder.setForeground(Color.GREEN);
+            labelDestinyFolder.setForeground(GREEN);
         } else {
-            labelDestinyFolder.setForeground(Color.RED);
+            labelDestinyFolder.setForeground(RED);
         }
     }
 
