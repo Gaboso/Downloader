@@ -3,6 +3,8 @@ package br.com.gaboso.photo;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicBorders;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -25,8 +27,8 @@ public class UiScreen {
         EventQueue.invokeLater(() -> {
             try {
                 UiScreen window = new UiScreen();
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 window.frmSearchphotos.setVisible(true);
-                //UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -50,7 +52,7 @@ public class UiScreen {
         frmSearchphotos.setBounds(100, 100, 450, 129);
         frmSearchphotos.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frmSearchphotos.getContentPane().setLayout(null);
-        frmSearchphotos.setIconImage(new ImageIcon(UiScreen.class.getResource("/img/camera.png")).getImage());
+        frmSearchphotos.setIconImage(new ImageIcon(getClass().getResource("/img/camera.png")).getImage());
 
         JPanel panel = new JPanel();
         panel.setBounds(0, 0, 444, 106);
@@ -74,6 +76,9 @@ public class UiScreen {
         destinyFolderField.setColumns(10);
 
         JButton buttonStart = new JButton("Iniciar");
+        buttonStart.setForeground(Color.decode("#EEEEEE"));
+        buttonStart.setBackground(Color.decode("#01579B"));
+        buttonStart.setBorder(new EmptyBorder(0, 0, 0, 0));
         buttonStart.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent arg0) {
@@ -89,14 +94,18 @@ public class UiScreen {
 
         if (url != null && url.trim().length() > 0) {
             labelUrl.setForeground(GREEN);
+            urlField.setBorder(new BasicBorders.FieldBorder(GREEN, GREEN, GREEN, GREEN));
         } else {
             labelUrl.setForeground(RED);
+            urlField.setBorder(new BasicBorders.FieldBorder(RED, RED, RED, RED));
         }
 
         if (folderPath != null && folderPath.trim().length() > 0) {
             labelDestinyFolder.setForeground(GREEN);
+            destinyFolderField.setBorder(new BasicBorders.FieldBorder(GREEN, GREEN, GREEN, GREEN));
         } else {
             labelDestinyFolder.setForeground(RED);
+            destinyFolderField.setBorder(new BasicBorders.FieldBorder(RED, RED, RED, RED));
         }
     }
 

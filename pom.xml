@@ -31,32 +31,6 @@
             <version>3.7.4</version>
         </dependency>
 
-        <!-- http://mvnrepository.com/artifact/com.seaglasslookandfeel/seaglasslookandfeel -->
-        <dependency>
-            <groupId>com.seaglasslookandfeel</groupId>
-            <artifactId>seaglasslookandfeel</artifactId>
-            <version>0.1.6.1</version>
-        </dependency>
-
     </dependencies>
-
-    <build>
-        <plugins>
-            <!-- Make this jar executable -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <!-- Jar file entry point -->
-                            <mainClass>br.com.gaboso.photo.UiScreen</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
