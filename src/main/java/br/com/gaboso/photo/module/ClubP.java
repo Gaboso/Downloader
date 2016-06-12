@@ -80,12 +80,13 @@ public class ClubP {
 
         for (Element element : elements) {
             String subUrl = element.attr("href");
-            //pegando o titulo da galeria
+            //pegando o título da galeria
             String subFolder = element.select(SPAN_TITLE).text();
             subFolder = subFolder.replace("!", "");
             subFolder = subFolder.replaceAll(" ", "_");
             String newDestinationFolder = destinationFolder + "\\" + subFolder;
             boolean mkdirs = new File(newDestinationFolder).mkdirs();
+            System.out.println("Foi necessario criar a pasta: " + (mkdirs ? "sim" : "não"));
             search.connection(subUrl, newDestinationFolder);
         }
     }
