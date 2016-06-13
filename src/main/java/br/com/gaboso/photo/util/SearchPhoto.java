@@ -97,12 +97,11 @@ public class SearchPhoto {
     private boolean isAdsImage() {
         String url = urlText.toLowerCase();
         String[] adsList = {"/ads/", "brazzers-boobs", "bang-bros-", "/images/smilies/", "naughty-america1",
-                "penthouse.jpg", "brazzers-doggy-style.jpg"};
+                "penthouse.jpg", "brazzers-doggy-style.jpg", "banner1.gif", "mofos.gif"};
 
         for (String ads : adsList) {
-            if (url.contains(ads)) {
+            if (url.contains(ads))
                 return true;
-            }
         }
 
         return false;

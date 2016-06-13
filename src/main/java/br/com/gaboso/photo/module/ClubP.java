@@ -1,7 +1,7 @@
 package br.com.gaboso.photo.module;
 
-import br.com.gaboso.photo.util.SearchPhoto;
 import br.com.gaboso.photo.text.Textual;
+import br.com.gaboso.photo.util.SearchPhoto;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static br.com.gaboso.photo.text.Textual.DOT_COM;
 import static br.com.gaboso.photo.text.Textual.HTTP_WWW;
@@ -25,7 +27,7 @@ public class ClubP {
     private static final String LINKS = "td > a";
     private static final String BLOG_LINK = "http://mypornstarblogs.com/";
 
-    public void downloadAll(String destinationFolder){
+    public void downloadAll(String destinationFolder) {
         List<String> addressList = new ArrayList<>();
 
         try {
@@ -46,9 +48,12 @@ public class ClubP {
                 }
             }
 
+            ExecutorService exec = Executors.newFixedThreadPool(4);
             for (String item : addressList) {
-                download(item, "C:\\photos\\");
+                exec.submit(() -> download(item, destinationFolder));
             }
+            exec.shutdown();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,6 +91,8 @@ public class ClubP {
             subFolder = subFolder.replaceAll(" ", "_");
             String newDestinationFolder = destinationFolder + "\\" + subFolder;
             boolean mkdirs = new File(newDestinationFolder).mkdirs();
+
+            System.out.println("Pasta Raiz: " + destinationFolder + "\nSub pasta: " + subFolder);
             System.out.println("Foi necessario criar a pasta: " + (mkdirs ? "sim" : "não"));
             search.connection(subUrl, newDestinationFolder);
         }
