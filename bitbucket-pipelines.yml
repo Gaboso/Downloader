@@ -8,3 +8,13 @@ pipelines:
         script: # Modify the commands below to build your repository.
           - mvn --version
           - mvn clean install
+  branches:
+    master:
+      - step:
+          script:
+            - echo "This script runs only on commit to the master branch."
+    1.0_0001:
+      - step:
+          image: java:openjdk-9 # This step uses its own image
+          script:
+            - echo "This script runs only on commit to branches with names that match the 1.0_0001"
