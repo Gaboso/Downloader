@@ -13,8 +13,8 @@ pipelines:
       - step:
           script:
             - echo "This script runs only on commit to the master branch."
-    1.0_0001:
+    1.0*:
       - step:
           image: java:openjdk-9 # This step uses its own image
           script:
-            - echo "This script runs only on commit to branches with names that match the 1.0_0001"
+            - echo "This script runs only on commit to branches with names that match the 1.0*"
