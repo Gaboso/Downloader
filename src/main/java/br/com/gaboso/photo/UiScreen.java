@@ -1,10 +1,10 @@
 package br.com.gaboso.photo;
 
+import br.com.gaboso.photo.util.SearchPhoto;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.basic.BasicBorders;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -14,11 +14,6 @@ public class UiScreen {
     private JFrame frmSearchphotos;
     private JTextField urlField;
     private JTextField destinyFolderField;
-    private JLabel labelDestinyFolder;
-    private JLabel labelUrl;
-
-    private final Color RED = Color.decode("#F44336");
-    private final Color GREEN = Color.decode("#4CAF50");
 
     /**
      * Launch the application.
@@ -58,12 +53,12 @@ public class UiScreen {
         panel.setBounds(0, 0, 444, 106);
         frmSearchphotos.getContentPane().add(panel);
 
-        labelUrl = new JLabel("URL:");
+        JLabel labelUrl = new JLabel("URL:");
         labelUrl.setVisible(true);
         panel.setLayout(new MigLayout("", "[100px][314px]", "[20px][20px][23px]"));
         panel.add(labelUrl, "cell 0 0,growx,aligny center");
 
-        labelDestinyFolder = new JLabel("Pasta de destino:");
+        JLabel labelDestinyFolder = new JLabel("Pasta de destino:");
         labelDestinyFolder.setVisible(true);
         panel.add(labelDestinyFolder, "cell 0 1,growx,aligny center");
 
@@ -92,20 +87,9 @@ public class UiScreen {
         String url = urlField.getText();
         String folderPath = destinyFolderField.getText();
 
-        if (url != null && url.trim().length() > 0) {
-            labelUrl.setForeground(GREEN);
-            urlField.setBorder(new BasicBorders.FieldBorder(GREEN, GREEN, GREEN, GREEN));
-        } else {
-            labelUrl.setForeground(RED);
-            urlField.setBorder(new BasicBorders.FieldBorder(RED, RED, RED, RED));
-        }
-
-        if (folderPath != null && folderPath.trim().length() > 0) {
-            labelDestinyFolder.setForeground(GREEN);
-            destinyFolderField.setBorder(new BasicBorders.FieldBorder(GREEN, GREEN, GREEN, GREEN));
-        } else {
-            labelDestinyFolder.setForeground(RED);
-            destinyFolderField.setBorder(new BasicBorders.FieldBorder(RED, RED, RED, RED));
+        if (url != null && folderPath != null && !url.trim().isEmpty() && !folderPath.trim().isEmpty()) {
+            SearchPhoto searchPhoto = new SearchPhoto();
+            searchPhoto.connection(url, folderPath);
         }
     }
 

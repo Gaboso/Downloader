@@ -66,9 +66,9 @@ public class SearchPhoto {
                 System.out.println("Iniciando gravação do arquivo.");
 
                 String filePath;
-                if (destinationFolder.endsWith("\\")) {
+                if (destinationFolder.endsWith("\\"))
                     filePath = destinationFolder + name;
-                } else {
+                else {
                     filePath = destinationFolder + "\\" + name;
                     destinationFolder = destinationFolder + "\\";
                 }
@@ -77,12 +77,10 @@ public class SearchPhoto {
                 if (!file.exists()) {
                     ImageIO.write(img, extension, file);
                     System.out.println("Arquivo: " + name + " gravado!!!");
-                } else {
+                } else
                     System.out.println("Arquivo: " + name + " já existente!!!");
-                }
-            } else {
+            } else
                 System.out.println("Propaganda descartada!!! " + urlText + " \n");
-            }
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Erro durante gravação do arquivo: " + name);
@@ -121,15 +119,13 @@ public class SearchPhoto {
         if (!urlText.startsWith("http")) {
             String end = urlText;
 
-            if (host.endsWith("/") && end.startsWith("/")) {
+            if (host.endsWith("/") && end.startsWith("/"))
                 host = host.substring(0, host.length() - 1);
-            }
 
-            if (host.endsWith("/") || end.startsWith("/")) {
+            if (host.endsWith("/") || end.startsWith("/"))
                 urlText = host + end;
-            } else {
+            else
                 urlText = host + "/" + end;
-            }
         }
 
         //tirar limitação de resolução
@@ -149,9 +145,8 @@ public class SearchPhoto {
         }
 
         //contem parâmetros
-        if (fileName.contains("?")) {
+        if (fileName.contains("?"))
             fileName = fileName.substring(0, fileName.indexOf("?"));
-        }
 
         return fileName;
     }

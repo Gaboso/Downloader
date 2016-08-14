@@ -49,9 +49,11 @@ public class ClubP {
             }
 
             ExecutorService exec = Executors.newFixedThreadPool(4);
+
             for (String item : addressList) {
                 exec.submit(() -> download(item, destinationFolder));
             }
+
             exec.shutdown();
 
         } catch (IOException e) {
