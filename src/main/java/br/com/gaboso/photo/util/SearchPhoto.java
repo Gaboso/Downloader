@@ -19,6 +19,7 @@ public class SearchPhoto {
     private String destinationFolder = "";
     private String urlText = "";
 
+
     public void connection(String url, String destinationName) {
         destinationFolder = destinationName;
         host = getHostUrl(url);
@@ -34,6 +35,12 @@ public class SearchPhoto {
         }
     }
 
+    /**
+     * Método para percorrer os elementos e depois chamar o método que cria a imagem
+     * a partir dos elementos analisados
+     *
+     * @param elements - elementos que serão percorridos (Tags com os links das imagens)
+     */
     private void scrollElements(Elements elements) {
         for (Element element : elements) {
             urlText = element.attr("src");
@@ -43,6 +50,12 @@ public class SearchPhoto {
         }
     }
 
+    /**
+     * Método que gera uma imagem
+     *
+     * @param name      - nome da imagem a ser gerada
+     * @param extension - extensão da imagem a ser gerada
+     */
     private void createImage(String name, String extension) {
         try {
             if (!isAdsImage()) {
@@ -53,9 +66,9 @@ public class SearchPhoto {
                 System.out.println("Iniciando gravação do arquivo.");
 
                 String filePath;
-                if (destinationFolder.endsWith("\\")) {
+                if (destinationFolder.endsWith("\\"))
                     filePath = destinationFolder + name;
-                } else {
+                else {
                     filePath = destinationFolder + "\\" + name;
                     destinationFolder = destinationFolder + "\\";
                 }
@@ -64,31 +77,39 @@ public class SearchPhoto {
                 if (!file.exists()) {
                     ImageIO.write(img, extension, file);
                     System.out.println("Arquivo: " + name + " gravado!!!");
-                } else {
+                } else
                     System.out.println("Arquivo: " + name + " já existente!!!");
-                }
-            } else {
-                System.out.println("Propaganda descartada!!! " + urlText+" \n");
-            }
+            } else
+                System.out.println("Propaganda descartada!!! " + urlText + " \n");
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Erro durante gravação do arquivo: " + name);
         }
     }
 
+    /**
+     * Método para verificar se a imagem atual é propaganda
+     *
+     * @return retorna true para propaganda e false caso contrario
+     */
     private boolean isAdsImage() {
         String url = urlText.toLowerCase();
-        String[] adsList = {"/ads/", "brazzers-boobs", "bang-bros-", "/images/smilies/", "naughty-america1"};
+        String[] adsList = {"/ads/", "brazzers-boobs", "bang-bros-", "/images/smilies/", "naughty-america1",
+                "penthouse.jpg", "brazzers-doggy-style.jpg", "banner1.gif", "mofos.gif"};
 
         for (String ads : adsList) {
-            if (url.contains(ads)) {
+            if (url.contains(ads))
                 return true;
-            }
         }
 
         return false;
     }
 
+    /**
+     * Metodo para pegar nome do arquivo a partir da url
+     *
+     * @return String com o nome do arquivo
+     */
     private String getFileNameFromUrl() {
         String[] parts = urlText.split("/");
         int last = parts.length - 1;
@@ -98,15 +119,13 @@ public class SearchPhoto {
         if (!urlText.startsWith("http")) {
             String end = urlText;
 
-            if (host.endsWith("/") && end.startsWith("/")) {
+            if (host.endsWith("/") && end.startsWith("/"))
                 host = host.substring(0, host.length() - 1);
-            }
 
-            if (host.endsWith("/") || end.startsWith("/")) {
+            if (host.endsWith("/") || end.startsWith("/"))
                 urlText = host + end;
-            } else {
+            else
                 urlText = host + "/" + end;
-            }
         }
 
         //tirar limitação de resolução
@@ -125,20 +144,31 @@ public class SearchPhoto {
             }
         }
 
-        //contem parametros
-        if (fileName.contains("?")) {
+        //contem parâmetros
+        if (fileName.contains("?"))
             fileName = fileName.substring(0, fileName.indexOf("?"));
-        }
 
         return fileName;
     }
 
+    /**
+     * Método para pegar extensão do arquivo
+     *
+     * @param fileName - nome do arquivo
+     * @return extensão do arquivo
+     */
     private String getFileExtension(String fileName) {
         String[] parts = fileName.split("\\.");
         int last = parts.length - 1;
         return parts[last];
     }
 
+    /**
+     * Método para pegar o host da url que foi passada
+     *
+     * @param urlText - url da qual quer pegar o host
+     * @return host pego da url informada
+     */
     private String getHostUrl(String urlText) {
         try {
             URL url = new URL(urlText);
