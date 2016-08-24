@@ -16,7 +16,16 @@ public class UiScreen {
     private JTextField destinyFolderField;
 
     /**
-     * Launch the application.
+     * Create the application.
+     */
+    private UiScreen() {
+        initialize();
+    }
+
+    /**
+     * * Launch the application.
+     *
+     * @param args - param args
      */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -28,13 +37,6 @@ public class UiScreen {
                 e.printStackTrace();
             }
         });
-    }
-
-    /**
-     * Create the application.
-     */
-    public UiScreen() {
-        initialize();
     }
 
     /**

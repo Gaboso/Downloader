@@ -146,7 +146,7 @@ public class SearchPhoto {
 
         //contem parâmetros
         if (fileName.contains("?"))
-            fileName = fileName.substring(0, fileName.indexOf("?"));
+            fileName = fileName.substring(0, fileName.indexOf('?'));
 
         return fileName;
     }
@@ -172,10 +172,10 @@ public class SearchPhoto {
     private String getHostUrl(String urlText) {
         try {
             URL url = new URL(urlText);
-            String host = url.getHost();
+            String hostText = url.getHost();
             String protocol = url.getProtocol();
 
-            return protocol + "://" + host + "/";
+            return protocol + "://" + hostText + "/";
         } catch (Exception e) {
             e.printStackTrace();
         }

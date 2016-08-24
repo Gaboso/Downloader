@@ -38,7 +38,7 @@ public class ClubP {
 
             for (Element element : elements) {
                 String textInLink = element.childNode(0).attr("text");
-                if (!textInLink.equals("Pictures") && !textInLink.equals("Videos")) {
+                if (!"Pictures".equals(textInLink) && !"Videos".equals(textInLink)) {
                     String href = element.attr("href");
                     if (href.contains(HTTP_WWW) && href.contains(DOT_COM)) {
                         href = href.replace(HTTP_WWW, "");
@@ -65,8 +65,8 @@ public class ClubP {
         String url = Textual.HTTP_WWW + webSiteName + DOT_COM_PHOTOS;
 
         try {
-            if (url.length() > 0 && !url.trim().equals("")) {
-                if (destinationFolder.length() > 0 && !destinationFolder.trim().equals("")) {
+            if (url.length() > 0 && !"".equals(url.trim())) {
+                if (destinationFolder.length() > 0 && !"".equals(destinationFolder.trim())) {
                     Document document = Jsoup.connect(url).timeout(3000).get();
                     String title = document.title();
                     String[] titleParts = title.split(PATTERN_TITLE);
