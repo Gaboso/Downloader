@@ -2,6 +2,7 @@ package br.com.gaboso.photo.module;
 
 import br.com.gaboso.photo.text.Textual;
 import br.com.gaboso.photo.util.SearchPhoto;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,6 +19,8 @@ import static br.com.gaboso.photo.text.Textual.DOT_COM;
 import static br.com.gaboso.photo.text.Textual.HTTP_WWW;
 
 public class ClubP {
+
+    private static final Logger LOGGER = Logger.getLogger(ClubP.class);
 
     private static final String DOT_COM_PHOTOS = Textual.DOT_COM + "/photos/";
     private static final String SPAN_TITLE = "span[class=entry-title]";
@@ -57,7 +60,7 @@ public class ClubP {
             exec.shutdown();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -78,25 +81,26 @@ public class ClubP {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
     private void runElements(Elements elements, String destinationFolder) {
-        SearchPhoto search = new SearchPhoto();
 
         for (Element element : elements) {
             String subUrl = element.attr("href");
+
             //pegando o título da galeria
             String subFolder = element.select(SPAN_TITLE).text();
             subFolder = subFolder.replace("!", "");
             subFolder = subFolder.replaceAll(" ", "_");
+
             String newDestinationFolder = destinationFolder + "\\" + subFolder;
             boolean mkdirs = new File(newDestinationFolder).mkdirs();
 
-            System.out.println("Pasta Raiz: " + destinationFolder + "\nSub pasta: " + subFolder);
-            System.out.println("Foi necessario criar a pasta: " + (mkdirs ? "sim" : "não"));
-            search.connection(subUrl, newDestinationFolder);
+            LOGGER.info("Pasta Raiz: " + destinationFolder + "\n\tSub pasta: " + subFolder);
+            LOGGER.info("Foi necessario criar a pasta: " + (mkdirs ? "sim" : "não"));
+            SearchPhoto.connection(subUrl, newDestinationFolder);
         }
     }
 

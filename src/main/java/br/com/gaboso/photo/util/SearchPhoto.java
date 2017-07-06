@@ -1,5 +1,6 @@
 package br.com.gaboso.photo.util;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -7,31 +8,32 @@ import org.jsoup.select.Elements;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 public class SearchPhoto {
 
-    private static final String PNG_JPG = "img[src~=\\.(png|jpe?g|gif)][class!=pure-img]";
+    private static final Logger LOGGER = Logger.getLogger(SearchPhoto.class);
 
-    private String host = "";
-    private String destinationFolder = "";
-    private String urlText = "";
+    private static final String PNG_JPG_GIF_PATTERN = "img[src~=\\.(png|jpe?g|gif)][class!=pure-img]";
+
+    private static String host = "";
+    private static String destinationFolder = "";
+    private static String urlText = "";
 
 
-    public void connection(String url, String destinationName) {
+    public static void connection(String url, String destinationName) {
         destinationFolder = destinationName;
-        host = getHostUrl(url);
+        host = NetUtils.getHostUrl(url);
 
         try {
-            System.out.println("\n\nAbrindo conexão");
+            LOGGER.info("Abrindo conexão com: " + url);
             Document document = Jsoup.connect(url).timeout(3000).get();
-            System.out.println("Conexão estabelecida.");
-            Elements elements = document.select(PNG_JPG);
+            LOGGER.info("Conexão estabelecida.");
+            Elements elements = document.select(PNG_JPG_GIF_PATTERN);
             scrollElements(elements);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -41,11 +43,11 @@ public class SearchPhoto {
      *
      * @param elements - elementos que serão percorridos (Tags com os links das imagens)
      */
-    private void scrollElements(Elements elements) {
+    private static void scrollElements(Elements elements) {
         for (Element element : elements) {
             urlText = element.attr("src");
             String name = getFileNameFromUrl();
-            String extension = getFileExtension(name);
+            String extension = DocUtils.getFileExtension(name);
             createImage(name, extension);
         }
     }
@@ -56,35 +58,37 @@ public class SearchPhoto {
      * @param name      - nome da imagem a ser gerada
      * @param extension - extensão da imagem a ser gerada
      */
-    private void createImage(String name, String extension) {
+    private static void createImage(String name, String extension) {
         try {
             if (!isAdsImage()) {
-                System.out.println("\n\nAcessando url: " + urlText);
+                LOGGER.info("Acessando url: " + urlText);
                 URL url = new URL(urlText);
-                System.out.println("Acessando arquivo na web");
+
+                LOGGER.info("Acessando arquivo na web");
                 BufferedImage img = ImageIO.read(url);
-                System.out.println("Iniciando gravação do arquivo.");
+                LOGGER.info("Iniciando gravação do arquivo.");
 
-                String filePath;
-                if (destinationFolder.endsWith("\\"))
-                    filePath = destinationFolder + name;
-                else {
-                    filePath = destinationFolder + "\\" + name;
-                    destinationFolder = destinationFolder + "\\";
-                }
-
-                File file = new File(filePath);
-                if (!file.exists()) {
-                    ImageIO.write(img, extension, file);
-                    System.out.println("Arquivo: " + name + " gravado!!!");
-                } else
-                    System.out.println("Arquivo: " + name + " já existente!!!");
-            } else
-                System.out.println("Propaganda descartada!!! " + urlText + " \n");
+                String filePath = generateFilePath(name);
+                DocUtils.write(img, filePath, name, extension);
+            } else {
+                LOGGER.info("Propaganda descartada: " + urlText);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Erro durante gravação do arquivo: " + name);
+            LOGGER.error("Erro durante acesso da imagem na url: " + urlText, e);
         }
+    }
+
+    private static String generateFilePath(String name) {
+        String filePath;
+
+        if (destinationFolder.endsWith("\\")) {
+            filePath = destinationFolder + name;
+        } else {
+            filePath = destinationFolder + "\\" + name;
+            destinationFolder = destinationFolder + "\\";
+        }
+
+        return filePath;
     }
 
     /**
@@ -92,7 +96,7 @@ public class SearchPhoto {
      *
      * @return retorna true para propaganda e false caso contrario
      */
-    private boolean isAdsImage() {
+    private static boolean isAdsImage() {
         String url = urlText.toLowerCase();
         String[] adsList = {"/ads/", "brazzers-boobs", "bang-bros-", "/images/smilies/", "naughty-america1",
                 "penthouse.jpg", "brazzers-doggy-style.jpg", "banner1.gif", "mofos.gif"};
@@ -110,7 +114,7 @@ public class SearchPhoto {
      *
      * @return String com o nome do arquivo
      */
-    private String getFileNameFromUrl() {
+    private static String getFileNameFromUrl() {
         String[] parts = urlText.split("/");
         int last = parts.length - 1;
         String fileName = parts[last];
@@ -144,42 +148,10 @@ public class SearchPhoto {
             }
         }
 
-        //contem parâmetros
-        if (fileName.contains("?"))
-            fileName = fileName.substring(0, fileName.indexOf('?'));
+        //remover parâmetros da url
+        fileName = NetUtils.removeURLParams(fileName);
 
         return fileName;
-    }
-
-    /**
-     * Método para pegar extensão do arquivo
-     *
-     * @param fileName - nome do arquivo
-     * @return extensão do arquivo
-     */
-    private String getFileExtension(String fileName) {
-        String[] parts = fileName.split("\\.");
-        int last = parts.length - 1;
-        return parts[last];
-    }
-
-    /**
-     * Método para pegar o host da url que foi passada
-     *
-     * @param urlText - url da qual quer pegar o host
-     * @return host pego da url informada
-     */
-    private String getHostUrl(String urlText) {
-        try {
-            URL url = new URL(urlText);
-            String hostText = url.getHost();
-            String protocol = url.getProtocol();
-
-            return protocol + "://" + hostText + "/";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return urlText;
     }
 
 }

@@ -1,7 +1,10 @@
 package br.com.gaboso.photo;
 
+
 import br.com.gaboso.photo.util.SearchPhoto;
+import br.com.gaboso.photo.util.Validate;
 import net.miginfocom.swing.MigLayout;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -10,6 +13,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class UiScreen {
+
+    private static final Logger LOGGER = Logger.getLogger(UiScreen.class);
+
+    // Colors
+    private static final Color BUTTON_FONT_COLOR = Color.decode("#EEEEEE");
+    private static final Color BUTTON_BACK_COLOR = Color.decode("#01579B");
 
     private JFrame frmSearchphotos;
     private JTextField urlField;
@@ -34,7 +43,7 @@ public class UiScreen {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 window.frmSearchphotos.setVisible(true);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
             }
         });
     }
@@ -73,25 +82,24 @@ public class UiScreen {
         destinyFolderField.setColumns(10);
 
         JButton buttonStart = new JButton("Iniciar");
-        buttonStart.setForeground(Color.decode("#EEEEEE"));
-        buttonStart.setBackground(Color.decode("#01579B"));
+        buttonStart.setForeground(BUTTON_FONT_COLOR);
+        buttonStart.setBackground(BUTTON_BACK_COLOR);
         buttonStart.setBorder(new EmptyBorder(0, 0, 0, 0));
         buttonStart.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent arg0) {
-                checkFields();
+                validateFieldsAndOpenConnection();
             }
         });
         panel.add(buttonStart, "cell 1 2,grow");
     }
 
-    private void checkFields() {
+    private void validateFieldsAndOpenConnection() {
         String url = urlField.getText();
         String folderPath = destinyFolderField.getText();
 
-        if (url != null && folderPath != null && !url.trim().isEmpty() && !folderPath.trim().isEmpty()) {
-            SearchPhoto searchPhoto = new SearchPhoto();
-            searchPhoto.connection(url, folderPath);
+        if (!Validate.isNullOrEmpty(url) && !Validate.isNullOrEmpty(folderPath)) {
+            SearchPhoto.connection(url, folderPath);
         }
     }
 

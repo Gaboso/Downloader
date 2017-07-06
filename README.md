@@ -21,7 +21,13 @@ A descrever
 
 ## Como usar
 
-A descrever
+__1° passo__: Execute o arquivo __`build.bat`__, presente no diretorio raiz deste projeto
+
+
+
+__2° passo__: Após a execução do primeiro passo, será gerado o arquivo __`scriptum.jar`__ no diretorio
+`target`..
+
 
 -----
 
@@ -41,6 +47,6 @@ Veja os issues do projeto: [aqui](../../issues)
 
 ## Licença
 
-© Copyright 2016 - All rights reserved | Todos os direitos Reservados
+© Copyright 2017 - All rights reserved | Todos os direitos Reservados
 
 __Gaboso__
