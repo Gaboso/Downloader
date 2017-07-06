@@ -10,6 +10,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
+import java.util.Properties;
 
 public class SearchPhoto {
 
@@ -21,7 +23,30 @@ public class SearchPhoto {
     private static String destinationFolder = "";
     private static String urlText = "";
 
+    private static String[] adsList = {};
 
+    static {
+        try {
+            Properties prop = new Properties();
+            prop.load(SearchPhoto.class.getResourceAsStream("/config.properties"));
+
+            for (Map.Entry<Object, Object> entry : prop.entrySet()) {
+                if ("ads".equals(entry.getKey())) {
+                    String values = (String) entry.getValue();
+                    adsList = values.split(",");
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Metodo que estabelece a conexão com a url passada
+     *
+     * @param url             - Url qual deve ser acessada
+     * @param destinationName - Local onde deve ser salvo as imagens recuperadas a partir url
+     */
     public static void connection(String url, String destinationName) {
         destinationFolder = destinationName;
         host = NetUtils.getHostUrl(url);
@@ -29,7 +54,7 @@ public class SearchPhoto {
         try {
             LOGGER.info("Abrindo conexão com: " + url);
             Document document = Jsoup.connect(url).timeout(3000).get();
-            LOGGER.info("Conexão estabelecida.");
+            LOGGER.info("Conexão estabelecida com: " + url);
             Elements elements = document.select(PNG_JPG_GIF_PATTERN);
             scrollElements(elements);
         } catch (Exception e) {
@@ -98,8 +123,6 @@ public class SearchPhoto {
      */
     private static boolean isAdsImage() {
         String url = urlText.toLowerCase();
-        String[] adsList = {"/ads/", "brazzers-boobs", "bang-bros-", "/images/smilies/", "naughty-america1",
-                "penthouse.jpg", "brazzers-doggy-style.jpg", "banner1.gif", "mofos.gif"};
 
         for (String ads : adsList) {
             if (url.contains(ads))

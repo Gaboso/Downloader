@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -94,9 +95,23 @@ public class UiScreen {
         panel.add(buttonStart, "cell 1 2,grow");
     }
 
+    /**
+     * Metodo qual checa se os campos foram preenchidos corretamente e sinaliza de forma visual.
+     * Se tudo estiver preenchido é chamado a conexao com a url que foi passada
+     */
     private void validateFieldsAndOpenConnection() {
         String url = urlField.getText();
         String folderPath = destinyFolderField.getText();
+
+        if (Validate.isNullOrEmpty(url))
+            urlField.setBorder(new LineBorder(Color.RED, 1));
+        else
+            urlField.setBorder(new LineBorder(Color.GREEN, 1));
+
+        if (Validate.isNullOrEmpty(folderPath))
+            destinyFolderField.setBorder(new LineBorder(Color.RED, 1));
+        else
+            destinyFolderField.setBorder(new LineBorder(Color.GREEN, 1));
 
         if (!Validate.isNullOrEmpty(url) && !Validate.isNullOrEmpty(folderPath)) {
             SearchPhoto.connection(url, folderPath);
