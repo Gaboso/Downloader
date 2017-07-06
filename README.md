@@ -25,7 +25,7 @@ __1° passo__: Execute o arquivo __`build.bat`__, presente no diretorio raiz des
 
 
 
-__2° passo__: Após a execução do primeiro passo, será gerado o arquivo __`scriptum.jar`__ no diretorio
+__2° passo__: Após a execução do primeiro passo, será gerado o arquivo __`downloader.jar`__ no diretorio
 `target`..
 
 
