@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
@@ -106,11 +107,11 @@ public class SearchPhoto {
     private static String generateFilePath(String name) {
         String filePath;
 
-        if (destinationFolder.endsWith("\\")) {
+        if (destinationFolder.endsWith(File.separator)) {
             filePath = destinationFolder + name;
         } else {
-            filePath = destinationFolder + "\\" + name;
-            destinationFolder = destinationFolder + "\\";
+            filePath = destinationFolder + File.separator + name;
+            destinationFolder = destinationFolder + File.separator;
         }
 
         return filePath;
@@ -143,17 +144,7 @@ public class SearchPhoto {
         String fileName = parts[last];
 
         // Se é um caminho relativo
-        if (!urlText.startsWith("http")) {
-            String end = urlText;
-
-            if (host.endsWith("/") && end.startsWith("/"))
-                host = host.substring(0, host.length() - 1);
-
-            if (host.endsWith("/") || end.startsWith("/"))
-                urlText = host + end;
-            else
-                urlText = host + "/" + end;
-        }
+        updateUrlWhenIsRelative();
 
         //tirar limitação de resolução
         if (fileName.contains("-")) {
@@ -175,6 +166,20 @@ public class SearchPhoto {
         fileName = NetUtils.removeURLParams(fileName);
 
         return fileName;
+    }
+
+    private static void updateUrlWhenIsRelative() {
+        if (!urlText.startsWith("http")) {
+            String end = urlText;
+
+            if (host.endsWith("/") && end.startsWith("/"))
+                host = host.substring(0, host.length() - 1);
+
+            if (host.endsWith("/") || end.startsWith("/"))
+                urlText = host + end;
+            else
+                urlText = host + "/" + end;
+        }
     }
 
 }
