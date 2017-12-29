@@ -21,7 +21,7 @@ A descrever
 
 ## Como usar
 
-__1° passo__: Execute o arquivo __`build.bat`__, presente no diretorio raiz deste projeto
+__1° passo__: Execute o arquivo __`build.bat`__ ou __`build.sh`__, presente no diretorio raiz deste projeto
 
 
 

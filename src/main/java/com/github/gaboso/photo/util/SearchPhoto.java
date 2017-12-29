@@ -1,4 +1,4 @@
-package br.com.gaboso.photo.util;
+package com.github.gaboso.photo.util;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -143,10 +143,8 @@ public class SearchPhoto {
         int last = parts.length - 1;
         String fileName = parts[last];
 
-        // Se é um caminho relativo
         updateUrlWhenIsRelative();
 
-        //tirar limitação de resolução
         if (fileName.contains("-")) {
             int dashIndex = fileName.lastIndexOf('-');
             int dotIndex = fileName.lastIndexOf('.');
@@ -162,10 +160,7 @@ public class SearchPhoto {
             }
         }
 
-        //remover parâmetros da url
-        fileName = NetUtils.removeURLParams(fileName);
-
-        return fileName;
+        return NetUtils.removeURLParams(fileName);
     }
 
     private static void updateUrlWhenIsRelative() {

@@ -1,4 +1,4 @@
-package br.com.gaboso.photo.util;
+package com.github.gaboso.photo.util;
 
 import org.apache.log4j.Logger;
 

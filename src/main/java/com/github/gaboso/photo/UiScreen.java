@@ -1,8 +1,8 @@
-package br.com.gaboso.photo;
+package com.github.gaboso.photo;
 
 
-import br.com.gaboso.photo.util.SearchPhoto;
-import br.com.gaboso.photo.util.Validate;
+import com.github.gaboso.photo.util.SearchPhoto;
+import com.github.gaboso.photo.util.Validate;
 import net.miginfocom.swing.MigLayout;
 import org.apache.log4j.Logger;
 
