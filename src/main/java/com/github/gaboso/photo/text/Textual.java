@@ -1,4 +1,4 @@
-package br.com.gaboso.photo.text;
+package com.github.gaboso.photo.text;
 
 /**
  * Classe para ser o dicionario da aplicacao contando com os termos textuais que se repetem

@@ -1,7 +1,7 @@
-package br.com.gaboso.photo.module;
+package com.github.gaboso.photo.module;
 
-import br.com.gaboso.photo.text.Textual;
-import br.com.gaboso.photo.util.SearchPhoto;
+import com.github.gaboso.photo.text.Textual;
+import com.github.gaboso.photo.util.SearchPhoto;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static br.com.gaboso.photo.text.Textual.DOT_COM;
-import static br.com.gaboso.photo.text.Textual.HTTP_WWW;
 
 public class ClubP {
 
@@ -43,9 +40,9 @@ public class ClubP {
                 String textInLink = element.childNode(0).attr("text");
                 if (!"Pictures".equals(textInLink) && !"Videos".equals(textInLink)) {
                     String href = element.attr("href");
-                    if (href.contains(HTTP_WWW) && href.contains(DOT_COM)) {
-                        href = href.replace(HTTP_WWW, "");
-                        href = href.replace(DOT_COM, "");
+                    if (href.contains(Textual.HTTP_WWW) && href.contains(Textual.DOT_COM)) {
+                        href = href.replace(Textual.HTTP_WWW, "");
+                        href = href.replace(Textual.DOT_COM, "");
                         addressList.add(href);
                     }
                 }
@@ -90,18 +87,22 @@ public class ClubP {
         for (Element element : elements) {
             String subUrl = element.attr("href");
 
-            //pegando o título da galeria
-            String subFolder = element.select(SPAN_TITLE).text();
-            subFolder = subFolder.replace("!", "");
-            subFolder = subFolder.replaceAll(" ", "_");
+            String subfolderName = makeSubfolderName(element);
 
-            String newDestinationFolder = destinationFolder + "\\" + subFolder;
+            String newDestinationFolder = destinationFolder + "\\" + subfolderName;
             boolean mkdirs = new File(newDestinationFolder).mkdirs();
 
-            LOGGER.info("Pasta Raiz: " + destinationFolder + "\n\tSub pasta: " + subFolder);
+            LOGGER.info("Pasta Raiz: " + destinationFolder + "\n\tSub pasta: " + subfolderName);
             LOGGER.info("Foi necessario criar a pasta: " + (mkdirs ? "sim" : "não"));
             SearchPhoto.connection(subUrl, newDestinationFolder);
         }
+    }
+
+    private String makeSubfolderName(Element element) {
+        String subFolder = element.select(SPAN_TITLE).text();
+        subFolder = subFolder.replace("!", "");
+        subFolder = subFolder.replaceAll(" ", "_");
+        return subFolder;
     }
 
 }
