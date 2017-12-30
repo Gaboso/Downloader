@@ -94,7 +94,11 @@ public class ClubP {
 
             LOGGER.info("Pasta Raiz: " + destinationFolder + "\n\tSub pasta: " + subfolderName);
             LOGGER.info("Foi necessario criar a pasta: " + (mkdirs ? "sim" : "não"));
-            SearchPhoto.connection(subUrl, newDestinationFolder);
+
+            SearchPhoto searchPhoto = new SearchPhoto();
+            Document page = searchPhoto.getPage(subUrl, newDestinationFolder);
+            Elements imageElements = searchPhoto.getImageElements(page);
+            searchPhoto.dowloadAllImages(imageElements);
         }
     }
 

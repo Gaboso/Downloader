@@ -5,6 +5,8 @@ import com.github.gaboso.photo.util.SearchPhoto;
 import com.github.gaboso.photo.util.Validate;
 import net.miginfocom.swing.MigLayout;
 import org.apache.log4j.Logger;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -114,7 +116,11 @@ public class UiScreen {
             destinyFolderField.setBorder(new LineBorder(Color.GREEN, 1));
 
         if (!Validate.isNullOrEmpty(url) && !Validate.isNullOrEmpty(folderPath)) {
-            SearchPhoto.connection(url, folderPath);
+            SearchPhoto searchPhoto = new SearchPhoto();
+            Document page = searchPhoto.getPage(url, folderPath);
+            Elements imageElements = searchPhoto.getImageElements(page);
+
+            searchPhoto.dowloadAllImages(imageElements);
         }
     }
 

@@ -48,19 +48,24 @@ public class SearchPhoto {
      * @param url             - Url qual deve ser acessada
      * @param destinationName - Local onde deve ser salvo as imagens recuperadas a partir url
      */
-    public static void connection(String url, String destinationName) {
+    public Document getPage(String url, String destinationName) {
         destinationFolder = destinationName;
         host = NetUtils.getHostUrl(url);
 
+        Document document = null;
+
         try {
             LOGGER.info("Abrindo conexão com: " + url);
-            Document document = Jsoup.connect(url).timeout(3000).get();
-            LOGGER.info("Conexão estabelecida com: " + url);
-            Elements elements = document.select(PNG_JPG_GIF_PATTERN);
-            scrollElements(elements);
+            document = Jsoup.connect(url).timeout(3000).get();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
+
+        return document;
+    }
+
+    public Elements getImageElements(Document document) {
+        return document.select(PNG_JPG_GIF_PATTERN);
     }
 
     /**
@@ -69,12 +74,12 @@ public class SearchPhoto {
      *
      * @param elements - elementos que serão percorridos (Tags com os links das imagens)
      */
-    private static void scrollElements(Elements elements) {
+    public void dowloadAllImages(Elements elements) {
         for (Element element : elements) {
             urlText = element.attr("src");
             String name = getFileNameFromUrl();
             String extension = DocUtils.getFileExtension(name);
-            createImage(name, extension);
+            downloadImage(name, extension, urlText);
         }
     }
 
@@ -84,27 +89,28 @@ public class SearchPhoto {
      * @param name      - nome da imagem a ser gerada
      * @param extension - extensão da imagem a ser gerada
      */
-    private static void createImage(String name, String extension) {
+    public void downloadImage(String name, String extension, String urlText) {
         try {
-            if (!isAdsImage()) {
-                LOGGER.info("Acessando url: " + urlText);
+            if (!isAdsImage(urlText)) {
+                LOGGER.info("Browsing url: " + urlText);
                 URL url = new URL(urlText);
 
-                LOGGER.info("Acessando arquivo na web");
+                LOGGER.info("Downloading file ...");
                 BufferedImage img = ImageIO.read(url);
-                LOGGER.info("Iniciando gravação do arquivo.");
+                LOGGER.info("Saving file ...");
 
                 String filePath = generateFilePath(name);
                 DocUtils.write(img, filePath, name, extension);
+                LOGGER.info("File saved with name: " + name + "." + extension);
             } else {
-                LOGGER.info("Propaganda descartada: " + urlText);
+                LOGGER.info("Ads found in: " + urlText);
             }
         } catch (IOException e) {
-            LOGGER.error("Erro durante acesso da imagem na url: " + urlText, e);
+            LOGGER.error("Error while downloading image from url: " + urlText, e);
         }
     }
 
-    private static String generateFilePath(String name) {
+    private String generateFilePath(String name) {
         String filePath;
 
         if (destinationFolder.endsWith(File.separator)) {
@@ -122,11 +128,11 @@ public class SearchPhoto {
      *
      * @return retorna true para propaganda e false caso contrario
      */
-    private static boolean isAdsImage() {
-        String url = urlText.toLowerCase();
+    private boolean isAdsImage(String url) {
+        String urlLowered = url.toLowerCase();
 
         for (String ads : adsList) {
-            if (url.contains(ads))
+            if (urlLowered.contains(ads))
                 return true;
         }
 
@@ -138,7 +144,7 @@ public class SearchPhoto {
      *
      * @return String com o nome do arquivo
      */
-    private static String getFileNameFromUrl() {
+    private String getFileNameFromUrl() {
         String[] parts = urlText.split("/");
         int last = parts.length - 1;
         String fileName = parts[last];
@@ -163,7 +169,7 @@ public class SearchPhoto {
         return NetUtils.removeURLParams(fileName);
     }
 
-    private static void updateUrlWhenIsRelative() {
+    private void updateUrlWhenIsRelative() {
         if (!urlText.startsWith("http")) {
             String end = urlText;
 
