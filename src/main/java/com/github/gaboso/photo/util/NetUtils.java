@@ -5,13 +5,6 @@ import org.apache.log4j.Logger;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * @author Gaboso
- * @since 06/07/2017
- * <p>
- * NetUtils
- * </p>
- */
 public class NetUtils {
 
     private static final Logger LOGGER = Logger.getLogger(NetUtils.class);

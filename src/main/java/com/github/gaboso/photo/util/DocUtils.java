@@ -7,13 +7,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * @author Gaboso
- * @since 06/07/2017
- * <p>
- * DocUtils
- * </p>
- */
 public class DocUtils {
 
     private static final Logger LOGGER = Logger.getLogger(DocUtils.class);

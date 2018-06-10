@@ -105,15 +105,8 @@ public class UiScreen {
         String url = urlField.getText();
         String folderPath = destinyFolderField.getText();
 
-        if (Validate.isNullOrEmpty(url))
-            urlField.setBorder(new LineBorder(Color.RED, 1));
-        else
-            urlField.setBorder(new LineBorder(Color.GREEN, 1));
-
-        if (Validate.isNullOrEmpty(folderPath))
-            destinyFolderField.setBorder(new LineBorder(Color.RED, 1));
-        else
-            destinyFolderField.setBorder(new LineBorder(Color.GREEN, 1));
+        urlField.setBorder(Validate.isNullOrEmpty(url) ? new LineBorder(Color.RED, 1) : new LineBorder(Color.GREEN, 1));
+        destinyFolderField.setBorder(Validate.isNullOrEmpty(folderPath) ? new LineBorder(Color.RED, 1) : new LineBorder(Color.GREEN, 1));
 
         if (!Validate.isNullOrEmpty(url) && !Validate.isNullOrEmpty(folderPath)) {
             SearchPhoto searchPhoto = new SearchPhoto();

@@ -68,6 +68,10 @@ public class SearchPhoto {
         return document.select(PNG_JPG_GIF_PATTERN);
     }
 
+    public Elements getTextElements(Document document) {
+        return document.select("p[class=phrase-item] a span");
+    }
+
     /**
      * Método para percorrer os elementos e depois chamar o método que cria a imagem
      * a partir dos elementos analisados

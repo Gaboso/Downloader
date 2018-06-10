@@ -41,9 +41,15 @@ public class ClubP {
                 if (!"Pictures".equals(textInLink) && !"Videos".equals(textInLink)) {
                     String href = element.attr("href");
                     if (href.contains(Textual.HTTP_WWW) && href.contains(Textual.DOT_COM)) {
-                        href = href.replace(Textual.HTTP_WWW, "");
-                        href = href.replace(Textual.DOT_COM, "");
-                        addressList.add(href);
+                        href = href.replace(Textual.HTTP_WWW, "")
+                                .replace(Textual.DOT_COM, "")
+                                .replace("/photos/", "")
+                                .replace("/videos/", "")
+                                .replaceAll("/", "");
+
+                        if (!addressList.contains(href)) {
+                            addressList.add(href);
+                        }
                     }
                 }
             }
@@ -89,10 +95,10 @@ public class ClubP {
 
             String subfolderName = makeSubfolderName(element);
 
-            String newDestinationFolder = destinationFolder + "\\" + subfolderName;
+            String newDestinationFolder = destinationFolder + "/" + subfolderName;
             boolean mkdirs = new File(newDestinationFolder).mkdirs();
 
-            LOGGER.info("Pasta Raiz: " + destinationFolder + "\n\tSub pasta: " + subfolderName);
+            LOGGER.info("Pasta Raiz: " + destinationFolder + "\r\n\tSub pasta: " + subfolderName);
             LOGGER.info("Foi necessario criar a pasta: " + (mkdirs ? "sim" : "não"));
 
             SearchPhoto searchPhoto = new SearchPhoto();
@@ -104,8 +110,7 @@ public class ClubP {
 
     private String makeSubfolderName(Element element) {
         String subFolder = element.select(SPAN_TITLE).text();
-        subFolder = subFolder.replace("!", "");
-        subFolder = subFolder.replaceAll(" ", "_");
+        subFolder = subFolder.replace("!", "").replaceAll(" ", "_");
         return subFolder;
     }
 
