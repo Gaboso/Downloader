@@ -25,7 +25,7 @@ public class ClubP {
     private static final String PATTERN_TITLE = "Photos \\| Club |Photos \\| ";
     //To download all
     private static final String LINKS = "td > a";
-    private static final String BLOG_LINK = "http://mypornstarblogs.com/";
+    private static final String BLOG_LINK = "https://mypornstarblogs.com/";
 
     public void downloadAll(String destinationFolder) {
         List<String> addressList = new ArrayList<>();
@@ -40,8 +40,8 @@ public class ClubP {
                 String textInLink = element.childNode(0).attr("text");
                 if (!"Pictures".equals(textInLink) && !"Videos".equals(textInLink)) {
                     String href = element.attr("href");
-                    if (href.contains(Textual.HTTP_WWW) && href.contains(Textual.DOT_COM)) {
-                        href = href.replace(Textual.HTTP_WWW, "")
+                    if (href.contains(Textual.HTTPS_WWW) && href.contains(Textual.DOT_COM)) {
+                        href = href.replace(Textual.HTTPS_WWW, "")
                                 .replace(Textual.DOT_COM, "")
                                 .replace("/photos/", "")
                                 .replace("/videos/", "")
@@ -68,7 +68,7 @@ public class ClubP {
     }
 
     public void download(String webSiteName, String destinationFolder) {
-        String url = Textual.HTTP_WWW + webSiteName + DOT_COM_PHOTOS;
+        String url = Textual.HTTPS_WWW + webSiteName + DOT_COM_PHOTOS;
 
         try {
             if (url.length() > 0 && !"".equals(url.trim())) {

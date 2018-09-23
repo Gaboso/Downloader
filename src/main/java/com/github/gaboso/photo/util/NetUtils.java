@@ -32,11 +32,9 @@ public class NetUtils {
     }
 
     public static String removeURLParams(String urlText) {
-        if (urlText.contains("?")) {
-            return urlText.substring(0, urlText.indexOf('?'));
-        }
-
-        return urlText;
+        return urlText.contains("?") ?
+                urlText.substring(0, urlText.indexOf('?')) :
+                urlText;
     }
 
 }

@@ -163,7 +163,7 @@ public class SearchPhoto {
 
             if (resolution.matches("\\d{2,4}x\\d{2,4}")) {
                 String start = fileName.substring(0, dashIndex);
-                String end = fileName.substring(dotIndex, fileName.length());
+                String end = fileName.substring(dotIndex);
                 String newFileName = start + end;
                 urlText = urlText.replace(fileName, newFileName);
                 fileName = newFileName;
@@ -177,13 +177,13 @@ public class SearchPhoto {
         if (!urlText.startsWith("http")) {
             String end = urlText;
 
-            if (host.endsWith("/") && end.startsWith("/"))
+            if (host.endsWith("/") && end.startsWith("/")) {
                 host = host.substring(0, host.length() - 1);
+            }
 
-            if (host.endsWith("/") || end.startsWith("/"))
-                urlText = host + end;
-            else
-                urlText = host + "/" + end;
+            urlText = host.endsWith("/") || end.startsWith("/") ?
+                    host + end :
+                    host + "/" + end;
         }
     }
 
