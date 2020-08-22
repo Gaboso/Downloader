@@ -1,16 +1,20 @@
 package com.github.gaboso.photo.util;
 
+import com.github.gaboso.photo.text.Textual;
 import org.apache.log4j.Logger;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.util.Map;
 import java.util.Properties;
 
@@ -56,7 +60,11 @@ public class SearchPhoto {
 
         try {
             LOGGER.info("Abrindo conexão com: " + url);
-            document = Jsoup.connect(url).timeout(3000).get();
+            Connection connection = url.contains(Textual.HTTPS)
+                    ? SSLHelper.getConnection(url)
+                    : Jsoup.connect(url);
+
+            document = connection.timeout(3000).get();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
@@ -72,45 +80,41 @@ public class SearchPhoto {
         return document.select("p[class=phrase-item] a span");
     }
 
-    /**
-     * Método para percorrer os elementos e depois chamar o método que cria a imagem
-     * a partir dos elementos analisados
-     *
-     * @param elements - elementos que serão percorridos (Tags com os links das imagens)
-     */
-    public void dowloadAllImages(Elements elements) {
+    public void dowloadAllImages(Elements elements, String attrName) {
         for (Element element : elements) {
-            urlText = element.attr("src");
+            urlText = element.attr(attrName);
             String name = getFileNameFromUrl();
-            String extension = DocUtils.getFileExtension(name);
-            downloadImage(name, extension, urlText);
+            downloadImage(name, urlText);
         }
     }
 
-    /**
-     * Método que gera uma imagem
-     *
-     * @param name      - nome da imagem a ser gerada
-     * @param extension - extensão da imagem a ser gerada
-     */
-    public void downloadImage(String name, String extension, String urlText) {
-        try {
-            if (!isAdsImage(urlText)) {
-                LOGGER.info("Browsing url: " + urlText);
-                URL url = new URL(urlText);
+    public void downloadImage(String name, String urlText) {
+        String filePath = generateFilePath(name);
+        File file = new File(filePath);
 
-                LOGGER.info("Downloading file ...");
-                BufferedImage img = ImageIO.read(url);
-                LOGGER.info("Saving file ...");
+        final boolean isAdsImage = isAdsImage(urlText);
+        final boolean fileExists = file.exists();
 
-                String filePath = generateFilePath(name);
-                DocUtils.write(img, filePath, name, extension);
-                LOGGER.info("File saved with name: " + name + "." + extension);
-            } else {
-                LOGGER.info("Ads found in: " + urlText);
+        if (!isAdsImage && !fileExists) {
+            try (
+                    ReadableByteChannel readChannel = Channels.newChannel(new URL(urlText).openStream());
+                    FileOutputStream fileOS = new FileOutputStream(filePath)
+            ) {
+
+                FileChannel writeChannel = fileOS.getChannel();
+                writeChannel.transferFrom(readChannel, 0, Long.MAX_VALUE);
+                LOGGER.info("File saved with name: " + name);
+
+            } catch (IOException e) {
+                LOGGER.error("Error while downloading image from url: " + urlText, e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Error while downloading image from url: " + urlText, e);
+        }
+        if (isAdsImage) {
+            LOGGER.info("Ads found in: " + urlText);
+        }
+
+        if (fileExists) {
+            LOGGER.info("Arquivo: " + name + " já existente!");
         }
     }
 

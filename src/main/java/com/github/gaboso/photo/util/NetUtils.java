@@ -12,12 +12,6 @@ public class NetUtils {
     private NetUtils() {
     }
 
-    /**
-     * Metodo para pegar o host da url que foi passada
-     *
-     * @param urlText - Url da qual e desejado o host
-     * @return host da url informada
-     */
     public static String getHostUrl(String urlText) {
         try {
             URL url = new URL(urlText);

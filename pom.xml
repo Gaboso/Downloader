@@ -6,7 +6,7 @@
 
     <groupId>com.github.gaboso</groupId>
     <artifactId>downloader</artifactId>
-    <version>1.0.1</version>
+    <version>2.0.0</version>
     <description>Algoritmo para buscar fotos</description>
 
     <properties>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.11.3</version>
+            <version>1.13.1</version>
         </dependency>
 
         <!-- http://mvnrepository.com/artifact/com.miglayout/miglayout -->
@@ -38,10 +38,11 @@
             <version>1.2.17</version>
         </dependency>
 
+
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
 
         <plugins>
             <plugin>

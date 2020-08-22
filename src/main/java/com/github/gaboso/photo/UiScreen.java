@@ -1,6 +1,7 @@
 package com.github.gaboso.photo;
 
 
+import com.github.gaboso.photo.module.ClubP;
 import com.github.gaboso.photo.util.SearchPhoto;
 import com.github.gaboso.photo.util.Validate;
 import net.miginfocom.swing.MigLayout;
@@ -113,7 +114,7 @@ public class UiScreen {
             Document page = searchPhoto.getPage(url, folderPath);
             Elements imageElements = searchPhoto.getImageElements(page);
 
-            searchPhoto.dowloadAllImages(imageElements);
+            searchPhoto.dowloadAllImages(imageElements, "src");
         }
     }
 

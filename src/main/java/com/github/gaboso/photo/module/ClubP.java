@@ -1,8 +1,10 @@
 package com.github.gaboso.photo.module;
 
 import com.github.gaboso.photo.text.Textual;
+import com.github.gaboso.photo.util.SSLHelper;
 import com.github.gaboso.photo.util.SearchPhoto;
 import org.apache.log4j.Logger;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,8 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ClubP {
 
@@ -24,28 +24,30 @@ public class ClubP {
     private static final String DIV_GALLERY = "div[class=entry entry-gallery] > a";
     private static final String PATTERN_TITLE = "Photos \\| Club |Photos \\| ";
     //To download all
-    private static final String LINKS = "td > a";
-    private static final String BLOG_LINK = "https://mypornstarblogs.com/";
+    private static final String LINKS = "li > p > a";
+    private static final String BLOG_LINK = "https://www.mypornstarblogs.com/pornstars/";
 
     public void downloadAll(String destinationFolder) {
         List<String> addressList = new ArrayList<>();
 
         try {
-            Document document = Jsoup.connect(BLOG_LINK).timeout(8000).get();
+            Document document = SSLHelper.getConnection(BLOG_LINK)
+                    .timeout(8000)
+                    .get();
 
             //pegando todas as galerias
             Elements elements = document.select(LINKS);
 
             for (Element element : elements) {
-                String textInLink = element.childNode(0).attr("text");
+                String textInLink = element.text();
                 if (!"Pictures".equals(textInLink) && !"Videos".equals(textInLink)) {
                     String href = element.attr("href");
-                    if (href.contains(Textual.HTTPS_WWW) && href.contains(Textual.DOT_COM)) {
-                        href = href.replace(Textual.HTTPS_WWW, "")
+                    if ((href.contains(Textual.HTTPS) || href.contains(Textual.HTTP)) && href.contains(Textual.DOT_COM)) {
+                        href = href
+                                .replace(Textual.WWW_DOT, "")
                                 .replace(Textual.DOT_COM, "")
                                 .replace("/photos/", "")
-                                .replace("/videos/", "")
-                                .replaceAll("/", "");
+                                .replace("/videos/", "");
 
                         if (!addressList.contains(href)) {
                             addressList.add(href);
@@ -54,13 +56,9 @@ public class ClubP {
                 }
             }
 
-            ExecutorService exec = Executors.newFixedThreadPool(4);
-
-            for (String item : addressList) {
-                exec.submit(() -> download(item, destinationFolder));
+            for (String address : addressList) {
+                download(address, destinationFolder);
             }
-
-            exec.shutdown();
 
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
@@ -68,20 +66,22 @@ public class ClubP {
     }
 
     public void download(String webSiteName, String destinationFolder) {
-        String url = Textual.HTTPS_WWW + webSiteName + DOT_COM_PHOTOS;
+        String url = webSiteName + DOT_COM_PHOTOS;
 
         try {
-            if (url.length() > 0 && !"".equals(url.trim())) {
-                if (destinationFolder.length() > 0 && !"".equals(destinationFolder.trim())) {
-                    Document document = Jsoup.connect(url).timeout(3000).get();
-                    String title = document.title();
-                    String[] titleParts = title.split(PATTERN_TITLE);
-                    destinationFolder += titleParts[1];
+            if (!destinationFolder.isEmpty()) {
+                Connection connection = url.contains(Textual.HTTPS)
+                        ? SSLHelper.getConnection(url)
+                        : Jsoup.connect(url);
 
-                    //pegando todas as galerias
-                    Elements elements = document.select(DIV_GALLERY);
-                    runElements(elements, destinationFolder);
-                }
+                Document document = connection.timeout(6000).get();
+                String title = document.title();
+                String[] titleParts = title.split(PATTERN_TITLE);
+                destinationFolder += File.separator + titleParts[1];
+
+                //pegando todas as galerias
+                Elements elements = document.select(DIV_GALLERY);
+                runElements(elements, destinationFolder);
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -95,7 +95,7 @@ public class ClubP {
 
             String subfolderName = makeSubfolderName(element);
 
-            String newDestinationFolder = destinationFolder + "/" + subfolderName;
+            String newDestinationFolder = destinationFolder + File.separator + subfolderName;
             boolean mkdirs = new File(newDestinationFolder).mkdirs();
 
             LOGGER.info("Pasta Raiz: " + destinationFolder + "\r\n\tSub pasta: " + subfolderName);
@@ -103,14 +103,29 @@ public class ClubP {
 
             SearchPhoto searchPhoto = new SearchPhoto();
             Document page = searchPhoto.getPage(subUrl, newDestinationFolder);
-            Elements imageElements = searchPhoto.getImageElements(page);
-            searchPhoto.dowloadAllImages(imageElements);
+            Elements imageElements = getImageElementsDefault(page);
+
+            if (!imageElements.isEmpty()) {
+                searchPhoto.dowloadAllImages(imageElements, "href");
+            } else {
+                Elements imageElementsSecondary = getImageElementsSecondary(page);
+                searchPhoto.dowloadAllImages(imageElementsSecondary, "data-src");
+            }
         }
+    }
+
+    private Elements getImageElementsDefault(Document page) {
+        return page.select("dl > dt > a");
+    }
+
+    private Elements getImageElementsSecondary(Document page) {
+        return page.select("img[loading][data-src]");
     }
 
     private String makeSubfolderName(Element element) {
         String subFolder = element.select(SPAN_TITLE).text();
-        subFolder = subFolder.replace("!", "").replaceAll(" ", "_");
+        subFolder = subFolder.replace("!", "")
+                .replace(" ", "_");
         return subFolder;
     }
 
