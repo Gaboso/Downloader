@@ -21,13 +21,13 @@ import java.util.Properties;
 
 public class SearchPhoto {
 
-    private static final Logger LOGGER = LogManager.getLogger(SearchPhoto.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(SearchPhoto.class);
 
     private static final String PNG_JPG_GIF_PATTERN = "img[src~=\\.(png|jpe?g|gif)][class!=pure-img]";
 
-    private static String host = "";
-    private static String destinationFolder = "";
-    private static String urlText = "";
+    private  String host = "";
+    private  String destinationFolder = "";
+    private  String urlText = "";
 
     private static String[] adsList = {};
 
@@ -60,7 +60,7 @@ public class SearchPhoto {
         Document document = null;
 
         try {
-            LOGGER.info("Abrindo conexão com: " + url);
+            LOGGER.info("Abrindo conexão com: {}", url);
             Connection connection = url.contains(Textual.HTTPS)
                     ? SSLHelper.getConnection(url)
                     : Jsoup.connect(url);
@@ -75,10 +75,6 @@ public class SearchPhoto {
 
     public Elements getImageElements(Document document) {
         return document.select(PNG_JPG_GIF_PATTERN);
-    }
-
-    public Elements getTextElements(Document document) {
-        return document.select("p[class=phrase-item] a span");
     }
 
     public void dowloadAllImages(Elements elements, String attrName) {
@@ -104,18 +100,18 @@ public class SearchPhoto {
 
                 FileChannel writeChannel = fileOS.getChannel();
                 writeChannel.transferFrom(readChannel, 0, Long.MAX_VALUE);
-                LOGGER.info("File saved with name: " + name);
+                LOGGER.info("File saved with name: {}", name);
 
             } catch (IOException e) {
-                LOGGER.error("Error while downloading image from url: " + urlText, e);
+                LOGGER.error("Error while downloading image from url: {} ", urlText, e);
             }
         }
         if (isAdsImage) {
-            LOGGER.info("Ads found in: " + urlText);
+            LOGGER.info("Ads found in: {}", urlText);
         }
 
         if (fileExists) {
-            LOGGER.info("Arquivo: " + name + " já existente!");
+            LOGGER.info("File: {} already exists!", name);
         }
     }
 

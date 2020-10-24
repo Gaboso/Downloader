@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class NetUtils {
 
-    private static final Logger LOGGER = LogManager.getLogger(NetUtils.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(NetUtils.class);
 
     private NetUtils() {
     }
@@ -21,7 +21,7 @@ public class NetUtils {
 
             return protocol + "://" + hostText + "/";
         } catch (MalformedURLException e) {
-            LOGGER.error("Erro durante acesso a url: " + urlText, e);
+            LOGGER.error("Erro durante acesso a url: {} %n", urlText, e);
         }
         return urlText;
     }
