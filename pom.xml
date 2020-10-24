@@ -6,7 +6,7 @@
 
     <groupId>com.github.gaboso</groupId>
     <artifactId>downloader</artifactId>
-    <version>2.0.2</version>
+    <version>3.0.0</version>
     <description>Image Downloader: jpg, png and gif</description>
 
     <properties>
@@ -57,7 +57,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.github.gaboso.photo.UiScreen</mainClass>
+                            <mainClass>com.github.gaboso.downloader.UiScreen</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

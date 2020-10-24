@@ -1,4 +1,4 @@
-package com.github.gaboso.photo.text;
+package com.github.gaboso.downloader.text;
 
 public class Textual {
 

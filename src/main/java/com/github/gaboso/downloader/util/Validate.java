@@ -1,4 +1,4 @@
-package com.github.gaboso.photo.util;
+package com.github.gaboso.downloader.util;
 
 public class Validate {
 

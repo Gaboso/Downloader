@@ -1,6 +1,6 @@
-package com.github.gaboso.photo.util;
+package com.github.gaboso.downloader.util;
 
-import com.github.gaboso.photo.text.Textual;
+import com.github.gaboso.downloader.text.Textual;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Connection;

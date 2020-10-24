@@ -1,4 +1,4 @@
-package com.github.gaboso.photo.ui;
+package com.github.gaboso.downloader.ui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

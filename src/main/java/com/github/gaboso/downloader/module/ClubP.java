@@ -1,8 +1,8 @@
-package com.github.gaboso.photo.module;
+package com.github.gaboso.downloader.module;
 
-import com.github.gaboso.photo.text.Textual;
-import com.github.gaboso.photo.util.SSLHelper;
-import com.github.gaboso.photo.util.SearchPhoto;
+import com.github.gaboso.downloader.text.Textual;
+import com.github.gaboso.downloader.util.SSLHelper;
+import com.github.gaboso.downloader.util.SearchPhoto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Connection;

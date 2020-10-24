@@ -1,8 +1,8 @@
-package com.github.gaboso.photo;
+package com.github.gaboso.downloader;
 
-import com.github.gaboso.photo.ui.BaseUI;
-import com.github.gaboso.photo.util.SearchPhoto;
-import com.github.gaboso.photo.util.Validate;
+import com.github.gaboso.downloader.ui.BaseUI;
+import com.github.gaboso.downloader.util.SearchPhoto;
+import com.github.gaboso.downloader.util.Validate;
 import net.miginfocom.swing.MigLayout;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
