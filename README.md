@@ -1,4 +1,4 @@
-# Downloader 
+# Downloader :camera:
 
 ![logo](img/logo.png)
 
