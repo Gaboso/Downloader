@@ -1,9 +1,11 @@
 package com.github.gaboso.photo.module;
 
+import com.github.gaboso.photo.UiScreen;
 import com.github.gaboso.photo.text.Textual;
 import com.github.gaboso.photo.util.SSLHelper;
 import com.github.gaboso.photo.util.SearchPhoto;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,9 +17,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ClubP {
 
-    private static final Logger LOGGER = Logger.getLogger(ClubP.class);
+    private static final Logger LOGGER = LogManager.getLogger(ClubP.class.getName());
 
     private static final String DOT_COM_PHOTOS = Textual.DOT_COM + "/photos/";
     private static final String SPAN_TITLE = "span[class=entry-title]";
@@ -25,7 +28,7 @@ public class ClubP {
     private static final String PATTERN_TITLE = "Photos \\| Club |Photos \\| ";
     //To download all
     private static final String LINKS = "li > p > a";
-    private static final String BLOG_LINK = "https://www.mypornstarblogs.com/pornstars/";
+    private static final String BLOG_LINK = "https://XXXXXX";
 
     public void downloadAll(String destinationFolder) {
         List<String> addressList = new ArrayList<>();

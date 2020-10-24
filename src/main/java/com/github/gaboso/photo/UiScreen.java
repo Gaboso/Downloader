@@ -1,11 +1,10 @@
 package com.github.gaboso.photo;
 
-
-import com.github.gaboso.photo.module.ClubP;
 import com.github.gaboso.photo.util.SearchPhoto;
 import com.github.gaboso.photo.util.Validate;
 import net.miginfocom.swing.MigLayout;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -18,7 +17,7 @@ import java.awt.event.MouseEvent;
 
 public class UiScreen {
 
-    private static final Logger LOGGER = Logger.getLogger(UiScreen.class);
+    private static final Logger LOGGER = LogManager.getLogger(UiScreen.class.getName());
 
     // Colors
     private static final Color BUTTON_FONT_COLOR = Color.decode("#EEEEEE");

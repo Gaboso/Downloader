@@ -1,7 +1,8 @@
 package com.github.gaboso.photo.util;
 
 import com.github.gaboso.photo.text.Textual;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -20,7 +21,7 @@ import java.util.Properties;
 
 public class SearchPhoto {
 
-    private static final Logger LOGGER = Logger.getLogger(SearchPhoto.class);
+    private static final Logger LOGGER = LogManager.getLogger(SearchPhoto.class.getName());
 
     private static final String PNG_JPG_GIF_PATTERN = "img[src~=\\.(png|jpe?g|gif)][class!=pure-img]";
 
@@ -64,7 +65,7 @@ public class SearchPhoto {
                     ? SSLHelper.getConnection(url)
                     : Jsoup.connect(url);
 
-            document = connection.timeout(3000).get();
+            document = connection.timeout(8000).get();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }

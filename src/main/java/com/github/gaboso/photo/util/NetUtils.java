@@ -1,13 +1,14 @@
 package com.github.gaboso.photo.util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class NetUtils {
 
-    private static final Logger LOGGER = Logger.getLogger(NetUtils.class);
+    private static final Logger LOGGER = LogManager.getLogger(NetUtils.class.getName());
 
     private NetUtils() {
     }
