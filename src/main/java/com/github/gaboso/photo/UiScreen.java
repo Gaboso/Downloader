@@ -1,5 +1,6 @@
 package com.github.gaboso.photo;
 
+import com.github.gaboso.photo.ui.BaseUI;
 import com.github.gaboso.photo.util.SearchPhoto;
 import com.github.gaboso.photo.util.Validate;
 import net.miginfocom.swing.MigLayout;
@@ -9,23 +10,21 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class UiScreen {
 
-    private static final Logger LOGGER = LogManager.getLogger(UiScreen.class.getName());
-
-    // Colors
-    private static final Color BUTTON_FONT_COLOR = Color.decode("#EEEEEE");
-    private static final Color BUTTON_BACK_COLOR = Color.decode("#01579B");
+    private static final Logger LOGGER = LogManager.getLogger(UiScreen.class);
 
     private JFrame frmSearchphotos;
     private JTextField urlField;
     private JTextField destinyFolderField;
+
+    private String url;
+    private String folderPath;
+    private boolean isValid;
 
     /**
      * Create the application.
@@ -57,64 +56,112 @@ public class UiScreen {
     private void initialize() {
         frmSearchphotos = new JFrame();
         frmSearchphotos.setResizable(false);
-        frmSearchphotos.setTitle("SearchPhotos");
+        frmSearchphotos.setTitle("Downloader");
         frmSearchphotos.setBounds(100, 100, 450, 129);
         frmSearchphotos.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frmSearchphotos.getContentPane().setLayout(null);
         frmSearchphotos.setIconImage(new ImageIcon(getClass().getResource("/img/camera.png")).getImage());
 
-        JPanel panel = new JPanel();
+        JPanel panel = BaseUI.newPanel();
         panel.setBounds(0, 0, 444, 106);
         frmSearchphotos.getContentPane().add(panel);
 
-        JLabel labelUrl = new JLabel("URL:");
-        labelUrl.setVisible(true);
+        JLabel labelUrl = BaseUI.newLabel("URL:");
         panel.setLayout(new MigLayout("", "[100px][314px]", "[20px][20px][23px]"));
         panel.add(labelUrl, "cell 0 0,growx,aligny center");
 
-        JLabel labelDestinyFolder = new JLabel("Pasta de destino:");
-        labelDestinyFolder.setVisible(true);
+        JLabel labelDestinyFolder = BaseUI.newLabel("Destination folder:");
         panel.add(labelDestinyFolder, "cell 0 1,growx,aligny center");
 
-        urlField = new JTextField();
+        urlField = BaseUI.newField();
         panel.add(urlField, "cell 1 0,grow");
-        urlField.setColumns(10);
 
-        destinyFolderField = new JTextField();
+        destinyFolderField = BaseUI.newField();
         panel.add(destinyFolderField, "cell 1 1,grow");
-        destinyFolderField.setColumns(10);
 
-        JButton buttonStart = new JButton("Iniciar");
-        buttonStart.setForeground(BUTTON_FONT_COLOR);
-        buttonStart.setBackground(BUTTON_BACK_COLOR);
-        buttonStart.setBorder(new EmptyBorder(0, 0, 0, 0));
+        JButton buttonStart = BaseUI.newButton();
         buttonStart.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                setLoading(buttonStart);
+
+                url = urlField.getText();
+                folderPath = destinyFolderField.getText();
+
+                validateFields();
+            }
+
             @Override
             public void mouseReleased(MouseEvent arg0) {
-                validateFieldsAndOpenConnection();
+                if (isValid) {
+                    try {
+                        openConnection(url, folderPath);
+
+                        setDefault(buttonStart);
+                    } catch (Exception e) {
+                        LOGGER.error(e);
+                        setError(buttonStart, "Try download again");
+                    }
+
+                } else {
+                    setError(buttonStart, "Check fields & try download again");
+                }
+
+
             }
         });
         panel.add(buttonStart, "cell 1 2,grow");
     }
 
-    /**
-     * Metodo qual checa se os campos foram preenchidos corretamente e sinaliza de forma visual.
-     * Se tudo estiver preenchido é chamado a conexao com a url que foi passada
-     */
-    private void validateFieldsAndOpenConnection() {
-        String url = urlField.getText();
-        String folderPath = destinyFolderField.getText();
+    private void setLoading(JButton button) {
+        final Cursor waitCursor = new Cursor(Cursor.WAIT_CURSOR);
 
-        urlField.setBorder(Validate.isNullOrEmpty(url) ? new LineBorder(Color.RED, 1) : new LineBorder(Color.GREEN, 1));
-        destinyFolderField.setBorder(Validate.isNullOrEmpty(folderPath) ? new LineBorder(Color.RED, 1) : new LineBorder(Color.GREEN, 1));
+        button.setText("Downloading ...");
+        button.setForeground(BaseUI.BUTTON_FONT_LOADING_COLOR);
+        button.setBackground(BaseUI.LOADING_COLOR);
+        button.setCursor(waitCursor);
+    }
 
-        if (!Validate.isNullOrEmpty(url) && !Validate.isNullOrEmpty(folderPath)) {
-            SearchPhoto searchPhoto = new SearchPhoto();
-            Document page = searchPhoto.getPage(url, folderPath);
-            Elements imageElements = searchPhoto.getImageElements(page);
+    private void setDefault(JButton button) {
+        final Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
 
-            searchPhoto.dowloadAllImages(imageElements, "src");
-        }
+        button.setText("Start Download");
+        button.setForeground(BaseUI.BUTTON_FONT_COLOR);
+        button.setBackground(BaseUI.BUTTON_BACK_DEFAULT_COLOR);
+        button.setCursor(handCursor);
+    }
+
+    private void setError(JButton button, String message) {
+        final Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
+
+        button.setText(message);
+        button.setForeground(BaseUI.BUTTON_FONT_ERROR_COLOR);
+        button.setBackground(BaseUI.ERROR_COLOR);
+        button.setCursor(handCursor);
+    }
+
+    private void validateFields() {
+        final boolean isValidURL = !Validate.isNullOrEmpty(url);
+        final boolean isValidFolder = !Validate.isNullOrEmpty(folderPath);
+
+        urlField.setBorder(isValidURL ? BaseUI.SUCCESS_BORDER : BaseUI.ERROR_BORDER);
+        destinyFolderField.setBorder(isValidFolder ? BaseUI.SUCCESS_BORDER : BaseUI.ERROR_BORDER);
+
+        isValid = isValidURL && isValidFolder;
+    }
+
+    private void openConnection(String url, String folderPath) {
+        SearchPhoto searchPhoto = new SearchPhoto();
+        Document page = searchPhoto.getPage(url, folderPath);
+        Elements imageElements = searchPhoto.getImageElements(page);
+
+        searchPhoto.dowloadAllImages(imageElements, "src");
+
+        urlField.setBorder(BaseUI.DEFAULT_BORDER);
+        destinyFolderField.setBorder(BaseUI.DEFAULT_BORDER);
+        LOGGER.info("Finished");
     }
 
 }

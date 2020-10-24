@@ -6,8 +6,8 @@
 
     <groupId>com.github.gaboso</groupId>
     <artifactId>downloader</artifactId>
-    <version>2.0.1</version>
-    <description>Buscador de fotos</description>
+    <version>2.0.2</version>
+    <description>Image Downloader: jpg, png and gif</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

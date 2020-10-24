@@ -1,6 +1,5 @@
 package com.github.gaboso.photo.module;
 
-import com.github.gaboso.photo.UiScreen;
 import com.github.gaboso.photo.text.Textual;
 import com.github.gaboso.photo.util.SSLHelper;
 import com.github.gaboso.photo.util.SearchPhoto;
@@ -20,7 +19,7 @@ import java.util.List;
 
 public class ClubP {
 
-    private static final Logger LOGGER = LogManager.getLogger(ClubP.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(ClubP.class);
 
     private static final String DOT_COM_PHOTOS = Textual.DOT_COM + "/photos/";
     private static final String SPAN_TITLE = "span[class=entry-title]";
@@ -101,8 +100,8 @@ public class ClubP {
             String newDestinationFolder = destinationFolder + File.separator + subfolderName;
             boolean mkdirs = new File(newDestinationFolder).mkdirs();
 
-            LOGGER.info("Pasta Raiz: " + destinationFolder + "\r\n\tSub pasta: " + subfolderName);
-            LOGGER.info("Foi necessario criar a pasta: " + (mkdirs ? "sim" : "não"));
+            LOGGER.info("Root folder: {} \r\n\tSub folder: {} ", destinationFolder, subfolderName);
+            LOGGER.info("Was necessary to create folder: {}", (mkdirs ? "Y" : "N"));
 
             SearchPhoto searchPhoto = new SearchPhoto();
             Document page = searchPhoto.getPage(subUrl, newDestinationFolder);
