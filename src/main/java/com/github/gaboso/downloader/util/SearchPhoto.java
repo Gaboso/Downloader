@@ -25,9 +25,9 @@ public class SearchPhoto {
 
     private static final String PNG_JPG_GIF_PATTERN = "img[src~=\\.(png|jpe?g|gif)][class!=pure-img]";
 
-    private  String host = "";
-    private  String destinationFolder = "";
-    private  String urlText = "";
+    private String host = "";
+    private String destinationFolder = "";
+    private String urlText = "";
 
     private static String[] adsList = {};
 
@@ -47,12 +47,6 @@ public class SearchPhoto {
         }
     }
 
-    /**
-     * Metodo que estabelece a conexão com a url passada
-     *
-     * @param url             - Url qual deve ser acessada
-     * @param destinationName - Local onde deve ser salvo as imagens recuperadas a partir url
-     */
     public Document getPage(String url, String destinationName) {
         destinationFolder = destinationName;
         host = NetUtils.getHostUrl(url);
@@ -62,8 +56,8 @@ public class SearchPhoto {
         try {
             LOGGER.info("Abrindo conexão com: {}", url);
             Connection connection = url.contains(Textual.HTTPS)
-                    ? SSLHelper.getConnection(url)
-                    : Jsoup.connect(url);
+                ? SSLHelper.getConnection(url)
+                : Jsoup.connect(url);
 
             document = connection.timeout(8000).get();
         } catch (Exception e) {
@@ -94,8 +88,8 @@ public class SearchPhoto {
 
         if (!isAdsImage && !fileExists) {
             try (
-                    ReadableByteChannel readChannel = Channels.newChannel(new URL(urlText).openStream());
-                    FileOutputStream fileOS = new FileOutputStream(filePath)
+                ReadableByteChannel readChannel = Channels.newChannel(new URL(urlText).openStream());
+                FileOutputStream fileOS = new FileOutputStream(filePath)
             ) {
 
                 FileChannel writeChannel = fileOS.getChannel();
@@ -128,11 +122,6 @@ public class SearchPhoto {
         return filePath;
     }
 
-    /**
-     * Método para verificar se a imagem atual é propaganda
-     *
-     * @return retorna true para propaganda e false caso contrario
-     */
     private boolean isAdsImage(String url) {
         String urlLowered = url.toLowerCase();
 
@@ -144,11 +133,6 @@ public class SearchPhoto {
         return false;
     }
 
-    /**
-     * Metodo para pegar nome do arquivo a partir da url
-     *
-     * @return String com o nome do arquivo
-     */
     private String getFileNameFromUrl() {
         String[] parts = urlText.split("/");
         int last = parts.length - 1;
@@ -175,7 +159,7 @@ public class SearchPhoto {
     }
 
     private void updateUrlWhenIsRelative() {
-        if (!urlText.startsWith("http")) {
+        if (!urlText.startsWith(Textual.HTTP)) {
             String end = urlText;
 
             if (host.endsWith("/") && end.startsWith("/")) {
@@ -183,8 +167,8 @@ public class SearchPhoto {
             }
 
             urlText = host.endsWith("/") || end.startsWith("/") ?
-                    host + end :
-                    host + "/" + end;
+                host + end :
+                host + "/" + end;
         }
     }
 

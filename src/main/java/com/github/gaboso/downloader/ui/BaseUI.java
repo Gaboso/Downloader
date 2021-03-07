@@ -26,7 +26,6 @@ public class BaseUI {
     public static final Color PANEL_COLOR = Color.decode("#F5F5F5");
     public static final Color FONT_COLOR_DEFAULT = Color.decode("#222B45");
 
-
     // BORDERS
     public static final LineBorder ERROR_BORDER = new LineBorder(ERROR_COLOR, 1);
     public static final LineBorder SUCCESS_BORDER = new LineBorder(SUCCESS_COLOR, 1);
@@ -72,6 +71,5 @@ public class BaseUI {
 
         return button;
     }
-
 
 }

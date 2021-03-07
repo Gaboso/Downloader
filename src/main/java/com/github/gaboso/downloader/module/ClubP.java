@@ -34,8 +34,8 @@ public class ClubP {
 
         try {
             Document document = SSLHelper.getConnection(BLOG_LINK)
-                    .timeout(8000)
-                    .get();
+                .timeout(8000)
+                .get();
 
             //pegando todas as galerias
             Elements elements = document.select(LINKS);
@@ -46,10 +46,10 @@ public class ClubP {
                     String href = element.attr("href");
                     if ((href.contains(Textual.HTTPS) || href.contains(Textual.HTTP)) && href.contains(Textual.DOT_COM)) {
                         href = href
-                                .replace(Textual.WWW_DOT, "")
-                                .replace(Textual.DOT_COM, "")
-                                .replace("/photos/", "")
-                                .replace("/videos/", "");
+                            .replace(Textual.WWW_DOT, "")
+                            .replace(Textual.DOT_COM, "")
+                            .replace("/photos/", "")
+                            .replace("/videos/", "");
 
                         if (!addressList.contains(href)) {
                             addressList.add(href);
@@ -73,8 +73,8 @@ public class ClubP {
         try {
             if (!destinationFolder.isEmpty()) {
                 Connection connection = url.contains(Textual.HTTPS)
-                        ? SSLHelper.getConnection(url)
-                        : Jsoup.connect(url);
+                    ? SSLHelper.getConnection(url)
+                    : Jsoup.connect(url);
 
                 Document document = connection.timeout(6000).get();
                 String title = document.title();
@@ -127,7 +127,7 @@ public class ClubP {
     private String makeSubfolderName(Element element) {
         String subFolder = element.select(SPAN_TITLE).text();
         subFolder = subFolder.replace("!", "")
-                .replace(" ", "_");
+            .replace(" ", "_");
         return subFolder;
     }
 
