@@ -1,9 +1,9 @@
 package com.github.gaboso.downloader.ui;
 
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import java.awt.*;
 
 public class BaseUI {
 

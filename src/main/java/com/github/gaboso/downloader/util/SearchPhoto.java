@@ -24,12 +24,7 @@ public class SearchPhoto {
     private static final Logger LOGGER = LogManager.getLogger(SearchPhoto.class);
 
     private static final String PNG_JPG_GIF_PATTERN = "img[src~=\\.(png|jpe?g|gif)][class!=pure-img]";
-
-    private String host = "";
-    private String destinationFolder = "";
-    private String urlText = "";
-
-    private static String[] adsList = {};
+    private static String[] adsList = { };
 
     static {
         try {
@@ -47,6 +42,10 @@ public class SearchPhoto {
         }
     }
 
+    private String host = "";
+    private String destinationFolder = "";
+    private String urlText = "";
+
     public Document getPage(String url, String destinationName) {
         destinationFolder = destinationName;
         host = NetUtils.getHostUrl(url);
@@ -54,7 +53,7 @@ public class SearchPhoto {
         Document document = null;
 
         try {
-            LOGGER.info("Abrindo conexão com: {}", url);
+            LOGGER.info("Opening connection with: {}", url);
             Connection connection = url.contains(Textual.HTTPS)
                 ? SSLHelper.getConnection(url)
                 : Jsoup.connect(url);
@@ -77,6 +76,31 @@ public class SearchPhoto {
             String name = getFileNameFromUrl();
             downloadImage(name, urlText);
         }
+    }
+
+    private String getFileNameFromUrl() {
+        String[] parts = urlText.split("/");
+        int last = parts.length - 1;
+        String fileName = parts[last];
+
+        updateUrlWhenIsRelative();
+
+        if (fileName.contains("-")) {
+            int dashIndex = fileName.lastIndexOf('-');
+            int dotIndex = fileName.lastIndexOf('.');
+
+            String resolution = fileName.substring(dashIndex + 1, dotIndex).toLowerCase();
+
+            if (resolution.matches("\\d{2,4}x\\d{2,4}")) {
+                String start = fileName.substring(0, dashIndex);
+                String end = fileName.substring(dotIndex);
+                String newFileName = start + end;
+                urlText = urlText.replace(fileName, newFileName);
+                fileName = newFileName;
+            }
+        }
+
+        return NetUtils.removeURLParams(fileName);
     }
 
     public void downloadImage(String name, String urlText) {
@@ -109,6 +133,20 @@ public class SearchPhoto {
         }
     }
 
+    private void updateUrlWhenIsRelative() {
+        if (!urlText.startsWith(Textual.HTTP)) {
+            String end = urlText;
+
+            if (host.endsWith("/") && end.startsWith("/")) {
+                host = host.substring(0, host.length() - 1);
+            }
+
+            urlText = host.endsWith("/") || end.startsWith("/") ?
+                host + end :
+                host + "/" + end;
+        }
+    }
+
     private String generateFilePath(String name) {
         String filePath;
 
@@ -126,50 +164,12 @@ public class SearchPhoto {
         String urlLowered = url.toLowerCase();
 
         for (String ads : adsList) {
-            if (urlLowered.contains(ads))
+            if (urlLowered.contains(ads)) {
                 return true;
+            }
         }
 
         return false;
-    }
-
-    private String getFileNameFromUrl() {
-        String[] parts = urlText.split("/");
-        int last = parts.length - 1;
-        String fileName = parts[last];
-
-        updateUrlWhenIsRelative();
-
-        if (fileName.contains("-")) {
-            int dashIndex = fileName.lastIndexOf('-');
-            int dotIndex = fileName.lastIndexOf('.');
-
-            String resolution = fileName.substring(dashIndex + 1, dotIndex).toLowerCase();
-
-            if (resolution.matches("\\d{2,4}x\\d{2,4}")) {
-                String start = fileName.substring(0, dashIndex);
-                String end = fileName.substring(dotIndex);
-                String newFileName = start + end;
-                urlText = urlText.replace(fileName, newFileName);
-                fileName = newFileName;
-            }
-        }
-
-        return NetUtils.removeURLParams(fileName);
-    }
-
-    private void updateUrlWhenIsRelative() {
-        if (!urlText.startsWith(Textual.HTTP)) {
-            String end = urlText;
-
-            if (host.endsWith("/") && end.startsWith("/")) {
-                host = host.substring(0, host.length() - 1);
-            }
-
-            urlText = host.endsWith("/") || end.startsWith("/") ?
-                host + end :
-                host + "/" + end;
-        }
     }
 
 }

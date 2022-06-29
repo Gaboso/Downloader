@@ -2,17 +2,17 @@ package com.github.gaboso.downloader;
 
 import com.github.gaboso.downloader.ui.BaseUI;
 import com.github.gaboso.downloader.util.SearchPhoto;
-import com.github.gaboso.downloader.util.Validate;
 import net.miginfocom.swing.MigLayout;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Strings;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.*;
 
 public class UiScreen {
 
@@ -34,30 +34,13 @@ public class UiScreen {
     }
 
     /**
-     * * Launch the application.
-     *
-     * @param args - param args
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                UiScreen window = new UiScreen();
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                window.frmSearchphotos.setVisible(true);
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage(), e);
-            }
-        });
-    }
-
-    /**
      * Initialize the contents of the frame.
      */
     private void initialize() {
         frmSearchphotos = new JFrame();
         frmSearchphotos.setResizable(false);
         frmSearchphotos.setTitle("Downloader");
-        frmSearchphotos.setBounds(100, 100, 450, 129);
+        frmSearchphotos.setBounds(100, 100, 460, 129);
         frmSearchphotos.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frmSearchphotos.getContentPane().setLayout(null);
         frmSearchphotos.setIconImage(new ImageIcon(getClass().getResource("/img/camera.png")).getImage());
@@ -109,7 +92,6 @@ public class UiScreen {
                     setError(buttonStart, "Check fields & try download again");
                 }
 
-
             }
         });
         panel.add(buttonStart, "cell 1 2,grow");
@@ -122,6 +104,28 @@ public class UiScreen {
         button.setForeground(BaseUI.BUTTON_FONT_LOADING_COLOR);
         button.setBackground(BaseUI.LOADING_COLOR);
         button.setCursor(waitCursor);
+    }
+
+    private void validateFields() {
+        final boolean isValidURL = Strings.isNotBlank(url);
+        final boolean isValidFolder = Strings.isNotBlank(folderPath);
+
+        urlField.setBorder(isValidURL ? BaseUI.SUCCESS_BORDER : BaseUI.ERROR_BORDER);
+        destinyFolderField.setBorder(isValidFolder ? BaseUI.SUCCESS_BORDER : BaseUI.ERROR_BORDER);
+
+        isValid = isValidURL && isValidFolder;
+    }
+
+    private void openConnection(String url, String folderPath) {
+        SearchPhoto searchPhoto = new SearchPhoto();
+        Document page = searchPhoto.getPage(url, folderPath);
+        Elements imageElements = searchPhoto.getImageElements(page);
+
+        searchPhoto.dowloadAllImages(imageElements, "src");
+
+        urlField.setBorder(BaseUI.DEFAULT_BORDER);
+        destinyFolderField.setBorder(BaseUI.DEFAULT_BORDER);
+        LOGGER.info("Finished");
     }
 
     private void setDefault(JButton button) {
@@ -142,26 +146,21 @@ public class UiScreen {
         button.setCursor(handCursor);
     }
 
-    private void validateFields() {
-        final boolean isValidURL = !Validate.isNullOrEmpty(url);
-        final boolean isValidFolder = !Validate.isNullOrEmpty(folderPath);
-
-        urlField.setBorder(isValidURL ? BaseUI.SUCCESS_BORDER : BaseUI.ERROR_BORDER);
-        destinyFolderField.setBorder(isValidFolder ? BaseUI.SUCCESS_BORDER : BaseUI.ERROR_BORDER);
-
-        isValid = isValidURL && isValidFolder;
-    }
-
-    private void openConnection(String url, String folderPath) {
-        SearchPhoto searchPhoto = new SearchPhoto();
-        Document page = searchPhoto.getPage(url, folderPath);
-        Elements imageElements = searchPhoto.getImageElements(page);
-
-        searchPhoto.dowloadAllImages(imageElements, "src");
-
-        urlField.setBorder(BaseUI.DEFAULT_BORDER);
-        destinyFolderField.setBorder(BaseUI.DEFAULT_BORDER);
-        LOGGER.info("Finished");
+    /**
+     * * Launch the application.
+     *
+     * @param args - param args
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                UiScreen window = new UiScreen();
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                window.frmSearchphotos.setVisible(true);
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        });
     }
 
 }

@@ -21,7 +21,7 @@ public class NetUtils {
 
             return protocol + "://" + hostText + "/";
         } catch (MalformedURLException e) {
-            LOGGER.error("Erro durante acesso a url: {} %n", urlText, e);
+            LOGGER.error("Error while trying to access: {} %n", urlText, e);
         }
         return urlText;
     }

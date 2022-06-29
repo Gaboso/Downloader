@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ClubP {
 
     private static final Logger LOGGER = LogManager.getLogger(ClubP.class);
@@ -34,8 +33,8 @@ public class ClubP {
 
         try {
             Document document = SSLHelper.getConnection(BLOG_LINK)
-                .timeout(8000)
-                .get();
+                                         .timeout(8000)
+                                         .get();
 
             //pegando todas as galerias
             Elements elements = document.select(LINKS);
@@ -116,19 +115,19 @@ public class ClubP {
         }
     }
 
+    private String makeSubfolderName(Element element) {
+        String subFolder = element.select(SPAN_TITLE).text();
+        subFolder = subFolder.replace("!", "")
+                             .replace(" ", "_");
+        return subFolder;
+    }
+
     private Elements getImageElementsDefault(Document page) {
         return page.select("dl > dt > a");
     }
 
     private Elements getImageElementsSecondary(Document page) {
         return page.select("img[loading][data-src]");
-    }
-
-    private String makeSubfolderName(Element element) {
-        String subFolder = element.select(SPAN_TITLE).text();
-        subFolder = subFolder.replace("!", "")
-            .replace(" ", "_");
-        return subFolder;
     }
 
 }
